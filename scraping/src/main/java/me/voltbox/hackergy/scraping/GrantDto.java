@@ -14,7 +14,7 @@ public class GrantDto {
     String type;
     List<String> category;
     String eligibleRegion;
-    List<String> eligableEntities;
+    List<String> eligibleEntities;
     String sponsor;
     String contact;
     String text;

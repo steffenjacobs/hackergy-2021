@@ -122,7 +122,7 @@ public class BmwiScraper {
                 .type(extractTextIfPresent(list.get(0)))
                 .category(Arrays.asList(((HtmlElement) list.get(1)).getTextContent().split(",")))
                 .eligibleRegion(extractTextIfPresent(list.get(2)))
-                .eligableEntities(Arrays.asList(((HtmlElement) list.get(3)).getTextContent().split(",")))
+                .eligibleEntities(Arrays.asList(((HtmlElement) list.get(3)).getTextContent().split(",")))
                 .text(extractNormalizedTextIfPresent(programPage.getFirstByXPath("//div[@class='content']//div[@class='rich--text']")))
                 .scrapeTime(LocalDateTime.now())
                 .scrapeId(scrapeId);

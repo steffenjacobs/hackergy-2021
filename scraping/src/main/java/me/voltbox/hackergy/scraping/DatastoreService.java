@@ -3,6 +3,7 @@ package me.voltbox.hackergy.scraping;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.stereotype.Component;
@@ -32,5 +33,9 @@ public class DatastoreService {
 
     public void insertGrant(GrantDto grant) {
         grantsCollection.insertOne(grant);
+    }
+
+    public FindIterable<GrantDto> findAll(){
+        return grantsCollection.find();
     }
 }
