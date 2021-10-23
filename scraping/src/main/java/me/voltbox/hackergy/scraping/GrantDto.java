@@ -18,7 +18,7 @@ public class GrantDto {
     String sponsor;
     String contact;
     String text;
-    String linkOut;
+    List<String> linkOut;
     LocalDateTime scrapeTime;
     String scrapeId;
     String source;

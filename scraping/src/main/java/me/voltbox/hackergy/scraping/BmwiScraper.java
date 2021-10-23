@@ -138,7 +138,7 @@ public class BmwiScraper {
         } else if (list.size() == 7) {
             grantBuilder = grantBuilder.sponsor(extractTextIfPresent(list.get(4)))
                     .contact(extractNormalizedTextIfPresent(list.get(5)))
-                    .linkOut(extractNormalizedTextIfPresent(list.get(6)));
+                    .linkOut(List.of(extractNormalizedTextIfPresent(list.get(6))));
         }
         return grantBuilder.build();
     }
