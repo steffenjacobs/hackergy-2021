@@ -21,4 +21,5 @@ public class GrantDto {
     String linkOut;
     LocalDateTime scrapeTime;
     String scrapeId;
+    String source;
 }

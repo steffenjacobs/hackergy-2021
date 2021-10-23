@@ -45,7 +45,7 @@ public class BmwiScraper {
     public void scrapeBmwi() throws IOException, ExecutionException, InterruptedException, TimeoutException {
         var scrapeId = UUID.randomUUID();
         var startTime = LocalDateTime.now();
-        log.info("Scrape {} started at {}.", scrapeId, startTime);
+        log.info("Scrape {} ({}) started at {}.", scrapeId, "BMWI", startTime);
 
         try (var webClient = createWebClient()) {
             webClient.getOptions().setJavaScriptEnabled(false);
@@ -114,6 +114,7 @@ public class BmwiScraper {
                     .text(extractNormalizedTextIfPresent(programPage.getFirstByXPath("//div[@class='content']//div[@class='rich--text']")))
                     .scrapeTime(LocalDateTime.now())
                     .scrapeId(scrapeId)
+                    .source("BMVI")
                     .build();
         }
 
@@ -125,7 +126,8 @@ public class BmwiScraper {
                 .eligibleEntities(Arrays.asList(((HtmlElement) list.get(3)).getTextContent().split(",")))
                 .text(extractNormalizedTextIfPresent(programPage.getFirstByXPath("//div[@class='content']//div[@class='rich--text']")))
                 .scrapeTime(LocalDateTime.now())
-                .scrapeId(scrapeId);
+                .scrapeId(scrapeId)
+                .source("BMVI");
 
         if (list.size() == 5) {
             grantBuilder = grantBuilder.contact(extractNormalizedTextIfPresent(list.get(4)));

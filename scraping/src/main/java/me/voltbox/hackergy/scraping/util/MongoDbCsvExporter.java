@@ -19,7 +19,7 @@ public class MongoDbCsvExporter {
         datastoreService.setupConnection();
 
         Files.writeString(Path.of("export.csv"),
-                "title;type;category;eligible_region;eligible_entities;sponsor;contact;link_out;scrape_id;scrape_time\n" .replace(';', DELIMITER),
+                "title;type;category;eligible_region;eligible_entities;sponsor;contact;link_out;source;scrape_id;scrape_time\n" .replace(';', DELIMITER),
                 StandardOpenOption.TRUNCATE_EXISTING);
         datastoreService.findAll().forEach((Consumer<GrantDto>) grantDto -> {
             try {
@@ -48,6 +48,8 @@ public class MongoDbCsvExporter {
         builder.append(clean(grantDto.getContact()));
         builder.append(DELIMITER);
         builder.append(clean(grantDto.getLinkOut()));
+        builder.append(DELIMITER);
+        builder.append(clean(grantDto.getSource()));
         builder.append(DELIMITER);
         builder.append(clean(grantDto.getScrapeId()));
         builder.append(DELIMITER);
