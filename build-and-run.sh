@@ -1,0 +1,1 @@
+./gradlew clean buildDockerImage && docker-compose up -d

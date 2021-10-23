@@ -1,0 +1,20 @@
+subprojects {
+
+    apply plugin: 'java'
+    compileJava.options.encoding = "UTF-8"
+
+    sourceCompatibility = '17'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+        maven { url 'https://repo.spring.io/snapshot' }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+group = 'me.voltbox'
+version = '1.0.0-SNAPSHOT'

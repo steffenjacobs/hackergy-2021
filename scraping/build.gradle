@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:6.7.0'
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.6.0-SNAPSHOT'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'com.bmuschko.docker-remote-api' version '6.7.0'
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+}
+
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+task copyJar(type: Copy) {
+    dependsOn 'bootJar'
+    from "build/libs/scraping.jar"
+    into 'build/docker'
+    rename { String fileName ->
+        fileName.replace("-${project.version}", "")
+    }
+}
+
+task copyFiles(type: Copy) {
+    from "Dockerfile"
+    into 'build/docker'
+}
+
+task buildDockerImage(type: DockerBuildImage) {
+    dependsOn copyJar
+    dependsOn copyFiles
+    inputDir = file('build/docker')
+    images = ["hackergy/volt-box-scraping"]
+}
+
+build.dependsOn buildDockerImage
+build.dependsOn copyJar
+build.dependsOn copyFiles
