@@ -4,13 +4,16 @@ services:
     image: hackergy/volt-box-scraping:latest
     ports:
       - "8080:8080"
-  postgres:
-    image: postgres:13.3-alpine3.14
-    volumes:
-      - "postgres-data:/var/lib/postgresql/data"
+
+  mongodb_container:
+    image: mongo:5.0.3-focal
     environment:
-      POSTGRES_DB: voltbox
-      POSTGRES_USER: voltbox
-      POSTGRES_PASSWORD: voltbox
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
 volumes:
-  postgres-data:
+  mongodb_data_container:

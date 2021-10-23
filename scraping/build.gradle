@@ -18,6 +18,10 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+
+    implementation group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.54.0'
+
+    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.10'
 }
 
 
