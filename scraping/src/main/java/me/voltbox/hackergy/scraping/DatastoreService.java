@@ -19,7 +19,7 @@ public class DatastoreService {
 
     @PostConstruct
     public void setupConnection() {
-        mongoClient = new MongoClient(new MongoClientURI("mongodb://root:rootpassword@localhost:27017"));
+        mongoClient = new MongoClient(new MongoClientURI("mongodb://root:rootpassword@mongodb:27017"));
         var pojoCodecRegistry = org.bson.codecs.configuration.CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                 org.bson.codecs.configuration.CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         var db = mongoClient.getDatabase("voltbox").withCodecRegistry(pojoCodecRegistry);
@@ -35,7 +35,7 @@ public class DatastoreService {
         grantsCollection.insertOne(grant);
     }
 
-    public FindIterable<GrantDto> findAll(){
+    public FindIterable<GrantDto> findAll() {
         return grantsCollection.find();
     }
 }

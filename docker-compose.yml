@@ -2,6 +2,8 @@ version: "3.9"  # optional since v1.27.0
 services:
   scraping:
     image: hackergy/volt-box-scraping:latest
+    depends_on:
+    - "mongodb_container"
     ports:
       - "8080:8080"
 
@@ -14,6 +16,7 @@ services:
       - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
+    container_name: mongodb
 
 volumes:
   mongodb_data_container:
