@@ -7,22 +7,28 @@ import me.voltbox.hackergy.common.domain.GrantDto;
 import me.voltbox.hackergy.common.service.DatastoreService;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class EnrichmentPipeline {
     private final TextSummarizationService textSummarizationService;
     private final DatastoreService datastoreService;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(24);
 
     public void enrichGrant(GrantDto grantDto) {
-        final EnrichedGrantDto enrichedGrant;
         if ("ItFoerderungen".equals(grantDto.getSource())) {
-            enrichedGrant = EnrichedGrantDto.builder().grantDto(grantDto).summary(grantDto.getText()).build();
+            var enrichedGrant = EnrichedGrantDto.builder().grantDto(grantDto).summary(grantDto.getText()).build();
+            datastoreService.insertEnrichedGrant(enrichedGrant);
 
         } else {
-            enrichedGrant = summarizeText(grantDto);
+            executorService.submit(() -> {
+                var enrichedGrant = summarizeText(grantDto);
+                datastoreService.insertEnrichedGrant(enrichedGrant);
+            });
         }
-        datastoreService.insertEnrichedGrant(enrichedGrant);
     }
 
     public EnrichedGrantDto summarizeText(GrantDto grantDto) {
