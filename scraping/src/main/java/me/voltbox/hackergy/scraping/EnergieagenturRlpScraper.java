@@ -86,6 +86,7 @@ public class EnergieagenturRlpScraper {
                 .scrapeTime(LocalDateTime.now())
                 .scrapeId(scrapeId)
                 .source("EnergieagenturRLP")
+                .linkOut(List.of(div.getPage().getUrl().toString()))
                 .build();
     }
 

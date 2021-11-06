@@ -120,6 +120,7 @@ public class BmwiScraper {
                     .scrapeTime(LocalDateTime.now())
                     .scrapeId(scrapeId)
                     .source("BMVI")
+                    .linkOut(List.of(programPage.getUrl().toString()))
                     .build();
         }
 
@@ -143,7 +144,7 @@ public class BmwiScraper {
         } else if (list.size() == 7) {
             grantBuilder = grantBuilder.sponsor(extractTextIfPresent(list.get(4)))
                     .contact(extractNormalizedTextIfPresent(list.get(5)))
-                    .linkOut(List.of(extractNormalizedTextIfPresent(list.get(6))));
+                    .linkOut(List.of(programPage.getUrl().toString(), extractNormalizedTextIfPresent(list.get(6))));
         }
         return grantBuilder.build();
     }
