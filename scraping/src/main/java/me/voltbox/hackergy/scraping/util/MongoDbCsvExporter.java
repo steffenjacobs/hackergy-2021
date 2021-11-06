@@ -1,7 +1,7 @@
 package me.voltbox.hackergy.scraping.util;
 
-import me.voltbox.hackergy.scraping.DatastoreService;
-import me.voltbox.hackergy.scraping.GrantDto;
+import me.voltbox.hackergy.common.domain.GrantDto;
+import me.voltbox.hackergy.common.service.DatastoreService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,7 +21,7 @@ public class MongoDbCsvExporter {
         Files.writeString(Path.of("export.csv"),
                 "title;type;category;eligible_region;eligible_entities;sponsor;contact;link_out;source;scrape_id;scrape_time\n" .replace(';', DELIMITER),
                 StandardOpenOption.TRUNCATE_EXISTING);
-        datastoreService.findAll().forEach((Consumer<GrantDto>) grantDto -> {
+        datastoreService.findAll().forEach(grantDto -> {
             try {
                 Files.writeString(Path.of("export.csv"), toCsv(grantDto), StandardOpenOption.APPEND);
             } catch (IOException e) {

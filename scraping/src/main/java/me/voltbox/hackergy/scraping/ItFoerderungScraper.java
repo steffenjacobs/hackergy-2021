@@ -4,6 +4,9 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.voltbox.hackergy.common.domain.GrantDto;
+import me.voltbox.hackergy.common.service.DatastoreService;
+import me.voltbox.hackergy.scraping.util.EnrichmentNotificationService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +26,7 @@ import java.util.concurrent.TimeoutException;
 public class ItFoerderungScraper {
 
     private final DatastoreService datastoreService;
-
-    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException, TimeoutException {
-        var datastoreService = new DatastoreService();
-        datastoreService.setupConnection();
-        new ItFoerderungScraper(datastoreService).scrape();
-        datastoreService.closeConnection();
-    }
+    private final EnrichmentNotificationService enrichmentNotificationService;
 
     @PostConstruct
     public void startScraping() {
@@ -72,6 +69,7 @@ public class ItFoerderungScraper {
             log.info("Finished fetching {} grants.", list.size());
         }
         log.info("Scrape {} finished at {}. Took {}s", scrapeId, LocalDateTime.now(), ChronoUnit.SECONDS.between(startTime, LocalDateTime.now()));
+        enrichmentNotificationService.notifyEnrichment(scrapeId);
     }
 
     private GrantDto extractGrant(HtmlDivision div, String scrapeId) {

@@ -1,6 +1,7 @@
-package me.voltbox.hackergy.scraping;
+package me.voltbox.hackergy.common.domain;
 
 import lombok.*;
+import org.bson.codecs.pojo.annotations.BsonId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GrantDto {
+    @BsonId
+    String _id;
     String title;
     String type;
     List<String> category;

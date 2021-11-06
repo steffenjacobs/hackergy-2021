@@ -6,6 +6,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.voltbox.hackergy.common.domain.GrantDto;
+import me.voltbox.hackergy.common.service.DatastoreService;
+import me.voltbox.hackergy.scraping.util.EnrichmentNotificationService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +27,7 @@ public class BmwiScraper {
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(12);
 
     private final DatastoreService datastoreService;
+    private final EnrichmentNotificationService enrichmentNotificationService;
 
     @PostConstruct
     public void startScraping() {
@@ -86,6 +90,7 @@ public class BmwiScraper {
             threadPool.shutdown();
         }
         log.info("Scrape {} finished at {}. Took {}s", scrapeId, LocalDateTime.now(), ChronoUnit.SECONDS.between(startTime, LocalDateTime.now()));
+        enrichmentNotificationService.notifyEnrichment(scrapeId);
     }
 
     private void fetchAndStoreGrant(String link, String scrapeId) {

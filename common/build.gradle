@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.6.0-SNAPSHOT'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.6.0-SNAPSHOT'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+
+    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.10'
+}

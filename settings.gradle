@@ -7,4 +7,6 @@ pluginManagement {
 }
 rootProject.name = 'hackergy'
 
+include 'common'
 include 'scraping'
+include 'enriching'

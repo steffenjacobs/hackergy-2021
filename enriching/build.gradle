@@ -17,9 +17,11 @@ plugins {
 dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.6.0-SNAPSHOT'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.0-SNAPSHOT'
+
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
 
+    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.10'
     implementation group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.54.0'
     implementation project(':common')
 }
@@ -29,7 +31,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
 task copyJar(type: Copy) {
     dependsOn 'bootJar'
-    from "build/libs/scraping.jar"
+    from "build/libs/enriching.jar"
     into 'build/docker'
     rename { String fileName ->
         fileName.replace("-${project.version}", "")
@@ -45,7 +47,7 @@ task buildDockerImage(type: DockerBuildImage) {
     dependsOn copyJar
     dependsOn copyFiles
     inputDir = file('build/docker')
-    images = ["hackergy/volt-box-scraping"]
+    images = ["hackergy/volt-box-enriching"]
 }
 
 build.dependsOn buildDockerImage
