@@ -1,6 +1,7 @@
 package me.voltbox.hackergy.enriching;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.voltbox.hackergy.common.service.DatastoreService;
 import me.voltbox.hackergy.enriching.enrichments.EnrichmentPipeline;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class EnrichmentService {
@@ -27,6 +29,7 @@ public class EnrichmentService {
         }
         EXECUTOR_SERVICE.submit(() -> {
             datastoreService.findByScrapeId(scrapeId.toString()).forEach(enrichmentPipeline::enrichGrant);
+            log.info("Finished enrichment of scrape {}.", scrapeId);
             ENRICHMENTS_FOR_SCRAPES_CURRENTLY_IN_PROGRESS.remove(scrapeId);
         });
         return true;
