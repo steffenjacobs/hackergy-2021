@@ -45,7 +45,7 @@ public class CategoryMappingService {
             case "Beratung", "Corona-Hilfe" -> "Beraten";
             case "Energieeffizienz & Erneuerbare Energien" -> "Sparen";
             case "Existenzgründung & -festigung" -> "Gründen";
-            case "Kultur, Medien & Sport", "Gesundheit & Soziales", "Regionalförderung", "Forschung & Innovation(themenoffen)",
+            case "Kultur, Medien & Sport", "Gesundheit & Soziales", "Regionalförderung", "Forschung & Innovation (themenoffen)",
                     "Forschung & Innovation (themenspezifisch)", "Landwirtschaft & Ländliche Entwicklung" -> "Fördern";
             case "Messen & Ausstellungen" -> "Werben";
             case "Umwelt- & Naturschutz", "Unternehmensfinanzierung" -> "Schützen";
