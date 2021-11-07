@@ -15,17 +15,18 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 public class EnrichmentPipeline {
     private final TextSummarizationService textSummarizationService;
+    private final CategoryMappingService categoryMappingService;
     private final DatastoreService datastoreService;
     private final ExecutorService executorService = Executors.newFixedThreadPool(24);
 
     public void enrichGrant(GrantDto grantDto) {
         if ("ItFoerderungen".equals(grantDto.getSource())) {
-            var enrichedGrant = EnrichedGrantDto.builder().grantDto(grantDto).summary(grantDto.getText()).build();
+            var enrichedGrant = categorize(EnrichedGrantDto.builder().grantDto(grantDto).summary(grantDto.getText()).build());
             datastoreService.insertEnrichedGrant(enrichedGrant);
 
         } else {
             executorService.submit(() -> {
-                var enrichedGrant = summarizeText(grantDto);
+                var enrichedGrant = categorize(summarizeText(grantDto));
                 datastoreService.insertEnrichedGrant(enrichedGrant);
             });
         }
@@ -35,5 +36,11 @@ public class EnrichmentPipeline {
         var shortText = textSummarizationService.summarize(grantDto.get_id(), grantDto.getText());
         log.info("Enriched grant {} with a short summary.", grantDto.get_id());
         return EnrichedGrantDto.builder().grantDto(grantDto).summary(shortText.orElse("-")).build();
+    }
+
+    public EnrichedGrantDto categorize(EnrichedGrantDto grantDto) {
+        var category = categoryMappingService.mapCategory(grantDto.getGrantDto());
+        log.info("Enriched grant {} with a cataegory.", grantDto.getGrantDto().get_id());
+        return EnrichedGrantDto.builder().grantDto(grantDto.getGrantDto()).summary(grantDto.getSummary()).enrichedCategories(category).build();
     }
 }

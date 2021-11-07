@@ -119,7 +119,7 @@ public class BmwiScraper {
                     .text(extractNormalizedTextIfPresent(programPage.getFirstByXPath("//div[@class='content']//div[@class='rich--text']")))
                     .scrapeTime(LocalDateTime.now())
                     .scrapeId(scrapeId)
-                    .source("BMVI")
+                    .source("BMWI")
                     .linkOut(List.of(programPage.getUrl().toString()))
                     .build();
         }
@@ -133,7 +133,7 @@ public class BmwiScraper {
                 .text(extractNormalizedTextIfPresent(programPage.getFirstByXPath("//div[@class='content']//div[@class='rich--text']")))
                 .scrapeTime(LocalDateTime.now())
                 .scrapeId(scrapeId)
-                .source("BMVI");
+                .source("BMWI");
 
         if (list.size() == 5) {
             grantBuilder = grantBuilder.contact(extractNormalizedTextIfPresent(list.get(4)));
