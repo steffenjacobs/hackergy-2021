@@ -48,7 +48,7 @@ public class DatastoreService {
     public Iterable<EnrichedGrantDto> findByFilter(GrantFilterDto filter) {
         return enrichedGrantsCollection.find(and(
                 in("enrichedCategories", filter.getCategory()),
-                or(not(exists("grantDto.eligibleRegion")), in("grantDto.eligibleRegion", filter.getRegion())),
+                or(not(exists("grantDto.eligibleRegion")), in("grantDto.eligibleRegion", filter.getRegion(), "bundesweit")),
                 or(not(exists("grantDto.type")), eq("grantDto.type", filter.getType())),
                 or(not(exists("grantDto.eligibleEntities")),in("grantDto.eligibleEntities", filter.getEntity()))
         ));
