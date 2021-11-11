@@ -24,7 +24,7 @@ public class EnrichmentService {
     private final EnrichmentPipeline enrichmentPipeline;
 
     public boolean triggerEnrichment(UUID scrapeId) {
-        if (ENRICHMENTS_FOR_SCRAPES_CURRENTLY_IN_PROGRESS.contains(scrapeId)) {
+        if (!ENRICHMENTS_FOR_SCRAPES_CURRENTLY_IN_PROGRESS.add(scrapeId)) {
             return false;
         }
         EXECUTOR_SERVICE.submit(() -> {

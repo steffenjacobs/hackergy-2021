@@ -50,7 +50,7 @@ public class DatastoreService {
                 in("enrichedCategories", filter.getCategory()),
                 or(not(exists("grantDto.eligibleRegion")), in("grantDto.eligibleRegion", filter.getRegion())),
                 or(not(exists("grantDto.type")), eq("grantDto.type", filter.getType())),
-                in("grantDto.eligibleEntities", filter.getEntity())
+                or(not(exists("grantDto.eligibleEntities")),in("grantDto.eligibleEntities", filter.getEntity()))
         ));
     }
 

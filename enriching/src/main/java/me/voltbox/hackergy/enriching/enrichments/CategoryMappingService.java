@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CategoryMappingService {
@@ -16,7 +17,7 @@ public class CategoryMappingService {
                 list.add(mapBmwi(category));
             }
         } else if ("ItFoerderungen".equals(grantDto.getSource())) {
-            for (var category : grantDto.getCategory()) {
+            for (var category : Optional.ofNullable(grantDto.getCategory()).orElse(List.of(""))) {
                 list.add(mapItFoerderungen(category));
             }
         } else if ("EnergieagenturRLP".equals(grantDto.getSource())) {
