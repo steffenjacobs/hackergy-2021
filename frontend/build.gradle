@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:6.7.0'
+    }
+}
+
+plugins {
+    id 'com.bmuschko.docker-remote-api' version '6.7.0'
+}
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+task buildDockerImage(type: DockerBuildImage) {
+    inputDir = file('.')
+    images = ["hackergy/frontend"]
+}
+
+build.dependsOn buildDockerImage
