@@ -50,13 +50,17 @@ public class DatastoreService {
                 in("enrichedCategories", filter.getCategory()),
                 or(not(exists("grantDto.eligibleRegion")), in("grantDto.eligibleRegion", filter.getRegion(), "bundesweit")),
                 or(not(exists("grantDto.type")), eq("grantDto.type", filter.getType())),
-                or(not(exists("grantDto.eligibleEntities")),in("grantDto.eligibleEntities", filter.getEntity()))
+                or(not(exists("grantDto.eligibleEntities")), in("grantDto.eligibleEntities", filter.getEntity()))
         ));
     }
 
     public void insertEnrichedGrant(EnrichedGrantDto grant) {
         trim(grant);
         enrichedGrantsCollection.insertOne(grant);
+    }
+
+    private String escapeBackslashes(String string){
+        return string.replace("\\", "\\\\");
     }
 
     public void trim(EnrichedGrantDto grant) {
@@ -79,11 +83,18 @@ public class DatastoreService {
     }
 
     private void trim(Supplier<String> supplier, Consumer<String> consumer) {
-        Optional.ofNullable(supplier.get()).map(String::trim).ifPresent(consumer::accept);
+        Optional.ofNullable(supplier.get())
+                .map(String::trim)
+                .map(this::escapeBackslashes)
+                .ifPresent(consumer::accept);
     }
 
     private void trimList(Supplier<List<String>> supplier, Consumer<List<String>> consumer) {
-        Optional.ofNullable(supplier.get()).map(list -> list.stream().map(String::trim).toList()).ifPresent(consumer::accept);
+        Optional.ofNullable(supplier.get()).map(list -> list.stream()
+                        .map(String::trim)
+                        .map(this::escapeBackslashes)
+                        .toList())
+                .ifPresent(consumer::accept);
     }
 
     public Iterable<GrantDto> findAll() {
