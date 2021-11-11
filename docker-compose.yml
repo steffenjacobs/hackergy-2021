@@ -4,50 +4,32 @@ services:
     image: hackergy/volt-box-scraping:latest
     depends_on:
     - "mongodb_container"
-    ports:
-      - "8081:8080"
 
   enriching:
     image: hackergy/volt-box-enriching:latest
     depends_on:
       - "mongodb_container"
-    ports:
-      - "8082:8080"
 
   rest-api:
     image: hackergy/volt-box-rest-api:latest
     depends_on:
       - "mongodb_container"
     ports:
-      - "8084:8080"
+      - "6084:8080"
 
   frontend:
     image: hackergy/frontend:latest
     ports:
-      - "8083:80"
+      - "6083:80"
 
   mongodb_container:
     image: mongo:5.0.3-focal
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
-    ports:
-      - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
     container_name: mongodb
-
-  mongodb_rest:
-    image: softinstigate/restheart:6.1.2
-    environment:
-      MONGO_URI: mongodb://root:rootpassword@mongodb
-    command: ["--envFile", "/opt/restheart/etc/default.properties"]
-    depends_on:
-      - mongodb_container
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./config/default.properties:/opt/restheart/etc/default.properties
 
 volumes:
   mongodb_data_container:

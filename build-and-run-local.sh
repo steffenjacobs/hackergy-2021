@@ -1,0 +1,1 @@
+./gradlew clean buildDockerImage && docker-compose down && docker-compose up -f docker-compose.yml -f docker-compose-debug.yml -d
