@@ -86,7 +86,7 @@ public class DatastoreService {
         Optional.ofNullable(supplier.get())
                 .map(String::trim)
                 .map(this::escapeBackslashes)
-                .ifPresent(consumer::accept);
+                .ifPresent(consumer);
     }
 
     private void trimList(Supplier<List<String>> supplier, Consumer<List<String>> consumer) {
@@ -94,7 +94,7 @@ public class DatastoreService {
                         .map(String::trim)
                         .map(this::escapeBackslashes)
                         .toList())
-                .ifPresent(consumer::accept);
+                .ifPresent(consumer);
     }
 
     public Iterable<GrantDto> findAll() {
