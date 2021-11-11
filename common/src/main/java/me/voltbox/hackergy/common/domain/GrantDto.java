@@ -14,7 +14,7 @@ public class GrantDto {
     @BsonId
     String _id;
     String title;
-    String type;
+    List<String> type;
     List<String> category;
     String eligibleRegion;
     List<String> eligibleEntities;

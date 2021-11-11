@@ -77,7 +77,7 @@ public class EnergieagenturRlpScraper {
     private GrantDto extractGrant(HtmlDivision div, String scrapeId) {
         var eligiblEntity = div.getParentNode().getParentNode().getParentNode().getChildNodes().get(1);
         var category = eligiblEntity.getParentNode().getParentNode().getParentNode().getChildNodes().get(1);
-        var text = div.getParentNode().getChildNodes().get(3).asNormalizedText();
+        var text = div.getParentNode().getChildNodes().get(3).asNormalizedText().trim();
         return GrantDto.builder()
                 .title(div.getTextContent().trim())
                 .eligibleEntities(List.of(eligiblEntity.getTextContent().trim()))

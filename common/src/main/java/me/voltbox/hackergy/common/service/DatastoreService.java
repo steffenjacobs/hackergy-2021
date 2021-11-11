@@ -6,13 +6,18 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import me.voltbox.hackergy.common.domain.EnrichedGrantDto;
 import me.voltbox.hackergy.common.domain.GrantDto;
+import me.voltbox.hackergy.common.domain.GrantFilterDto;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.*;
 
 @Component
 public class DatastoreService {
@@ -40,8 +45,45 @@ public class DatastoreService {
         grantsCollection.insertOne(grant);
     }
 
+    public Iterable<EnrichedGrantDto> findByFilter(GrantFilterDto filter) {
+        return enrichedGrantsCollection.find(and(
+                in("enrichedCategories", filter.getCategory()),
+                or(not(exists("grantDto.eligibleRegion")), in("grantDto.eligibleRegion", filter.getRegion())),
+                or(not(exists("grantDto.type")), eq("grantDto.type", filter.getType())),
+                in("grantDto.eligibleEntities", filter.getEntity())
+        ));
+    }
+
     public void insertEnrichedGrant(EnrichedGrantDto grant) {
+        trim(grant);
         enrichedGrantsCollection.insertOne(grant);
+    }
+
+    public void trim(EnrichedGrantDto grant) {
+        trim(grant::getSummary, grant::setSummary);
+        trimList(grant::getEnrichedCategories, grant::setEnrichedCategories);
+        trim(grant.getGrantDto());
+    }
+
+    private void trim(GrantDto grant) {
+        trim(grant::getTitle, grant::setTitle);
+        trim(grant::getEligibleRegion, grant::setEligibleRegion);
+        trim(grant::getSponsor, grant::setSponsor);
+        trim(grant::getContact, grant::setContact);
+        trim(grant::getText, grant::setText);
+        trim(grant::getSource, grant::setText);
+        trimList(grant::getType, grant::setType);
+        trimList(grant::getCategory, grant::setCategory);
+        trimList(grant::getEligibleEntities, grant::setEligibleEntities);
+        trimList(grant::getLinkOut, grant::setLinkOut);
+    }
+
+    private void trim(Supplier<String> supplier, Consumer<String> consumer) {
+        Optional.ofNullable(supplier.get()).map(String::trim).ifPresent(consumer::accept);
+    }
+
+    private void trimList(Supplier<List<String>> supplier, Consumer<List<String>> consumer) {
+        Optional.ofNullable(supplier.get()).map(list -> list.stream().map(String::trim).toList()).ifPresent(consumer::accept);
     }
 
     public Iterable<GrantDto> findAll() {

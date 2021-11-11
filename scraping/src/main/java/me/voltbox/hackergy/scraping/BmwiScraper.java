@@ -126,7 +126,7 @@ public class BmwiScraper {
 
         var grantBuilder = GrantDto.builder()
                 .title(extractTextIfPresent(programPage.getFirstByXPath("//h1[@class='title']")))
-                .type(extractTextIfPresent(list.get(0)))
+                .type(Arrays.asList(extractTextIfPresent(list.get(0)).split(",")))
                 .category(Arrays.asList(((HtmlElement) list.get(1)).getTextContent().split(",")))
                 .eligibleRegion(extractTextIfPresent(list.get(2)))
                 .eligibleEntities(Arrays.asList(((HtmlElement) list.get(3)).getTextContent().split(",")))
@@ -150,11 +150,11 @@ public class BmwiScraper {
     }
 
     private String extractTextIfPresent(Object obj) {
-        return Optional.ofNullable(obj).map(HtmlElement.class::cast).map(HtmlElement::getTextContent).orElse("<empty>");
+        return Optional.ofNullable(obj).map(HtmlElement.class::cast).map(HtmlElement::getTextContent).map(String::trim).orElse("<empty>");
     }
 
     private String extractNormalizedTextIfPresent(Object obj) {
-        return Optional.ofNullable(obj).map(HtmlElement.class::cast).map(HtmlElement::asNormalizedText).orElse("<empty>");
+        return Optional.ofNullable(obj).map(HtmlElement.class::cast).map(HtmlElement::asNormalizedText).map(String::trim).orElse("<empty>");
     }
 
     private WebClient createWebClient() {
