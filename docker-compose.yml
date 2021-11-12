@@ -20,7 +20,9 @@ services:
   frontend:
     image: hackergy/frontend:latest
     ports:
-      - "6083:80"
+      - "6083:6083"
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
 
   mongodb_container:
     image: mongo:5.0.3-focal

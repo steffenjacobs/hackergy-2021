@@ -38,11 +38,11 @@
 
             function httpGet(entity, region, category, type, social){
                 var xhr = new XMLHttpRequest();
-                var url = `http://localhost:8084/api?entity=${entity}&region=${region}&category=${category}&type=${type}&social=${social}`;
+                var url = location.protocol + '//' + location.host + `/api?entity=${entity}&region=${region}&category=${category}&type=${type}&social=${social}`;
                 console.log(url);
                 xhr.open("GET", url, true);
                 xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.send(null);
+                xhr.send();
 
                 xhr.onreadystatechange = function () {
                     if (this.readyState != 4) return;
