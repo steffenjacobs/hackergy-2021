@@ -15,8 +15,37 @@
         
         <!-- <link href="css/styles.css" rel="stylesheet" />-->
         <link href="css/cockpit.css" rel="stylesheet" />
+        <script src="js/staticData.js"></script>
 
         <script> 
+
+            var kv_pair = {};
+
+            function applyChanges(details, ml_output, weblink){
+                document.getElementById("summary_div").innerHTML = details;
+                document.getElementById("ml_output_div").innerHTML = ml_output;
+                document.getElementById("frame_viewer").setAttribute("src", weblink);
+            }
+
+            function clickOnFunding(event){
+                console.log("click");
+                var fund_name = event.innerHTML.replaceAll('&amp;', '&');
+                console.log(fund_name);
+                console.log(kv_pair[fund_name].details);
+                
+                applyChanges(kv_pair[fund_name].details, kv_pair[fund_name].summary, kv_pair[fund_name].link);
+            }
+
+            function create_Funding_project(fund_name){                
+                var a_tag = document.createElement('a');
+                a_tag.setAttribute("onclick", "clickOnFunding(this)");
+                a_tag.classList.add('btn-primary');
+                a_tag.setAttribute("id", "submitButton")  
+                a_tag.setAttribute("type", "submit");
+                a_tag.setAttribute("style", "margin-top:7px");                                
+                a_tag.innerHTML = fund_name;                                
+                document.getElementById("fund_div").appendChild(a_tag);
+            }
         
             function onLoadFunction(){
                 var url =  decodeURI(window.location.href);
@@ -30,10 +59,23 @@
                 var type = categoryArray[2].split('=')[1].replaceAll('<<<', '&');
                 var money = categoryArray[3].split('=')[1];
                 var social = categoryArray[4].split('=')[1];
-                
-                console.log("values=" + category + " - " + geo + " - " + type + " - " + money + " - " + social );
+
+
+                //create one Funding button in UI
+                //create_Funding_project('created via code');
+
+                /* $ajax call via following values*/                
+                //console.log("values=" + category + " - " + geo + " - " + type + " - " + money + " - " + social );
+
+                //if user clicks on funding project, text boxes and web link need to update
+                //applyChanges('summary_here', 'ML stuff there', 'https://formulare.virtuelles-rathaus.de/servlet/de.formsolutions.FillServlet?sid=mCHrgCmZC82TgG5nKAn4HKMqA2JJ9A&f=j.pdf');
+
+
+                //console.log(text);
+                //console.log(JSON.parse(JSON.stringify(text)));
 
                 httpGet(category, geo, type, money, social);
+
             }
 
             function httpGet(entity, region, category, type, social){
@@ -48,8 +90,23 @@
                     if (this.readyState != 4) return;
 
                     if (this.status == 200) {
-                        var data = JSON.parse(this.responseText);
-                        console.log(data);
+                        var json = JSON.parse(this.responseText);
+                        console.log(json);
+                        for(var i = 0; i < json.length; i++){
+                            if(i > 10 ){
+                                break;
+                            }
+                            if(json[i].grantDto.title.length > 50){
+                                continue;
+                            }
+                            var fund_name = json[i].grantDto.title;
+                            var details = json[i].grantDto.eligibleEntities[0] + " - " + json[i].grantDto.text + " - " + json[i].grantDto.category[0];
+                            var summary = json[i].summary;
+                            var web_link = json[i].grantDto.linkOut[0];
+                            kv_pair[fund_name +  ""] = { "details": details, "summary": summary, "link": web_link};
+                            create_Funding_project(json[i].grantDto.title);
+                        }
+                        console.log(kv_pair);
                     }
                 };
             }
@@ -57,35 +114,70 @@
         </script>
 
     </head>
-    <body onload="onLoadFunction()">     
-        <div class="bodyLayout">
-            <div class="logo">
-                 <img class="topright" src="assets//Logo.PNG"> 
+    <body onload="onLoadFunction()"> 
+        <div class="fix_stuff">
+            <div class="bgstuff_2">
+                <video class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop"><source src="assets/mp4/bg.mp4" type="video/mp4" /></video>
+            </div>                
+
+            <div class="bgstuff"> 
+                <img class="bgcontent" src="assets//img//bg.png">
             </div>
 
-            <div class="header">
 
-            </div>
-
-            <div class="list">
-
-            </div>
-
-            <div class="ML">
-
-            </div>
-
-            <div class="frame">
-                <iframe id='frame_viewer' src="http://www.africau.edu/images/default/sample.pdf"  type="application/pdf">
-            </div>
+            <div class="bodyLayout">
+                    <div class="logo">
+                         <img class="topright" src="assets//img//Logo_small.png">
+                    </div>
         
+                    <div class="header">
+                        <h1 id="header_text"> Gute Neuigkeiten! Wir haben passende Förderungeninitiativen für Sie gefunden!</h1>
+                    </div>
         
+                    <div class="list">
+                        <div class="upper_ergebnisse">  <h3 id="result_text"> Ergebnisse </h3> </div>                
+                        <div class= "under_ergebnisse buttons_alignment" id="fund_div"> 
+                        <!--    <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm123</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Progrregamm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Prograergemm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm14344</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programmreger1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Prograergergermm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Prograregemm1</a>
+                            <a onclick="clickOnFunding(this)"  class="btn-primary" id="submitButton" type="submit" style="margin-top:7px">Programm1</a> -->
+                        </div>
+                    </div>
+        
+                    <div class="summary">
+                        <div class="upper_ergebnisse">  <h3 id="result_text"> Details </h3> </div>
+                        <div class= "under_ergebnisse" id="summary_div"> 
+                                Bitte ein Fördermittel auswählen.
+                        </div>
+        
+                    </div>
+        
+                    <div class="ML">
+                        <div class="upper_ergebnisse">  <h3 id="result_text"> Schlüsselinformation </h3> </div>
+                        <div class= "under_ergebnisse" id="ml_output_div">
+                            Bitte ein Fördermittel auswählen.
+                        </div>
+                    </div>
+        
+                    <div class="frame">
+                        <iframe id='frame_viewer' src="http://www.africau.edu/images/default/sample.pdf" >
+                    </div>
+                
+                </div>   
+        </div>
             
-        <!--    <div class="masthead">
-                <div class="masthead-content text-black">
-                    <iframe src="http://www.africau.edu/images/default/sample.pdf" width="500" height="375" type="application/pdf">
-                </div>
-            </div>    -->
-        </div>   
+
     </body>
 </html>

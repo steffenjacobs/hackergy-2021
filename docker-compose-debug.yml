@@ -8,21 +8,6 @@ services:
     ports:
       - "6082:8080"
 
-  rest-api:
-    image: hackergy/volt-box-rest-api:latest
-    depends_on:
-      - "mongodb_container"
-    ports:
-      - "6084:8080"
-
-  frontend:
-    image: hackergy/frontend:latest
-    ports:
-      - "6083:80"
-
   mongodb_container:
     ports:
       - 27017:27017
-
-  mongodb_rest:
-      - "6080:8080"
