@@ -41,7 +41,7 @@ public class EnrichmentPipeline {
     }
 
     public EnrichedGrantDto summarizeText(GrantDto grantDto) {
-        var shortText = textSummarizationService.summarize(grantDto.get_id().toString(), grantDto.getText());
+        var shortText = textSummarizationService.summarize(grantDto.get_id(), grantDto.getText());
         log.info("Enriched grant {} with a short summary.", grantDto.get_id());
         return EnrichedGrantDto.builder().grantDto(grantDto).summary(shortText.orElse("-")).build();
     }

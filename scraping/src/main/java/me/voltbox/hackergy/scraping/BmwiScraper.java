@@ -133,6 +133,7 @@ public class BmwiScraper {
                 .text(extractNormalizedTextIfPresent(programPage.getFirstByXPath("//div[@class='content']//div[@class='rich--text']")))
                 .scrapeTime(LocalDateTime.now())
                 .scrapeId(scrapeId)
+                .linkOut(List.of(programPage.getUrl().toString()))
                 .source("BMWI");
 
         if (list.size() == 5) {

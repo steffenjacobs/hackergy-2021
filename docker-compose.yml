@@ -4,6 +4,7 @@ services:
     image: hackergy/volt-box-scraping:latest
     depends_on:
     - "mongodb_container"
+    - "enriching"
 
   enriching:
     image: hackergy/volt-box-enriching:latest
