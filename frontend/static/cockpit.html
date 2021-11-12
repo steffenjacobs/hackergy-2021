@@ -21,10 +21,17 @@
 
             var kv_pair = {};
 
-            function applyChanges(details, ml_output, weblink){
-                document.getElementById("summary_div").innerHTML = details;
+            function applyChanges(details, ml_output, weblink, details){
+                //document.getElementById("summary_div").innerHTML = details;
                 document.getElementById("ml_output_div").innerHTML = ml_output;
                 document.getElementById("frame_viewer").setAttribute("src", weblink);
+
+                document.getElementById("item_1").innerHTML = details.eligibleEntities;
+                document.getElementById("item_2").innerHTML = details.enrichedCategories;
+                document.getElementById("item_3").innerHTML = details.type;
+                document.getElementById("item_4").innerHTML = details.category;
+                document.getElementById("item_5").innerHTML = details.eligibleRegion;
+                document.getElementById("item_6").innerHTML = details.contact;
             }
 
             function clickOnFunding(event){
@@ -33,7 +40,7 @@
                 console.log(fund_name);
                 console.log(kv_pair[fund_name].details);
                 
-                applyChanges(kv_pair[fund_name].details, kv_pair[fund_name].summary, kv_pair[fund_name].link);
+                applyChanges(kv_pair[fund_name].details, kv_pair[fund_name].summary, kv_pair[fund_name].link, kv_pair[fund_name].details);
             }
 
             function create_Funding_project(fund_name){                
@@ -73,9 +80,7 @@
 
                 //console.log(text);
                 //console.log(JSON.parse(JSON.stringify(text)));
-
                 httpGet(category, geo, type, money, social);
-
             }
 
             function httpGet(entity, region, category, type, social){
@@ -91,7 +96,6 @@
 
                     if (this.status == 200) {
                         var json = JSON.parse(this.responseText);
-                        console.log(json);
                         for(var i = 0; i < json.length; i++){
                             if(i > 10 ){
                                 break;
@@ -100,11 +104,23 @@
                                 continue;
                             }
                             var fund_name = json[i].grantDto.title;
-                            var details = json[i].grantDto.eligibleEntities[0] + " - " + json[i].grantDto.text + " - " + json[i].grantDto.category[0];
-                            var summary = json[i].summary;
+                            //var details = json[i].grantDto.eligibleEntities[0] + " - " + json[i].grantDto.text + " - " + json[i].grantDto.category[0];
+                            var summary = json[i].summary.replaceAll('\n', '<br/>');
                             var web_link = json[i].grantDto.linkOut[0];
-                            kv_pair[fund_name +  ""] = { "details": details, "summary": summary, "link": web_link};
+                            kv_pair[fund_name +  ""] = { "details":
+                                {
+                                    "eligibleEntities": json[i].grantDto.eligibleEntities.join(' '),
+                                    "source": json[i].grantDto.source,
+                                    "category": json[i].grantDto.category.join(' '),
+                                    "enrichedCategories": json[i].enrichedCategories.join(' '),
+                                    "contact": json[i].grantDto.contact,
+                                    "type": json[i].grantDto.type.join(', '),
+                                    "eligibleRegion": json[i].grantDto.eligibleRegion
+                                }
+                                , "summary": summary, "link": web_link};
                             create_Funding_project(json[i].grantDto.title);
+                            document.getElementById("fund_div").lastChild.click();
+
                         }
                         console.log(kv_pair);
                     }
@@ -127,11 +143,12 @@
 
             <div class="bodyLayout">
                     <div class="logo">
-                         <img class="topright" src="assets//img//Logo_small.png">
+                         <img class="topright" src="assets//Logo.PNG"> 
                     </div>
         
                     <div class="header">
-                        <h1 id="header_text"> Gute Neuigkeiten! Wir haben passende Förderungeninitiativen für Sie gefunden!</h1>
+                        <h1 id="header_text"> Gute Neuigkeiten!</h1>
+                        <div id="result_text" class="subtitle">Wir haben passende Förderungeninitiativen für Sie gefunden!</div>
                     </div>
         
                     <div class="list">
@@ -159,20 +176,24 @@
                     <div class="summary">
                         <div class="upper_ergebnisse">  <h3 id="result_text"> Details </h3> </div>
                         <div class= "under_ergebnisse" id="summary_div"> 
-                                Bitte ein Fördermittel auswählen.
+
+                        <div> <span class="span_class_2"> Berechtigt: </span> <span id="item_1" class="span_class"></span> <span class="span_class_2"> Kategorie: </span> <span id="item_2" class="span_class"></span>  </div>
+                        <div> <span class="span_class_2"> Typ: </span> <span id="item_3" class="span_class"></span> <span class="span_class_2"> Unterkategorie: </span> <span id="item_4" class="span_class"></span>  </div>
+                        <div> <span class="span_class_2"> Region: </span> <span id="item_5" class="span_class"></span> <span class="span_class_2"> Kontakt: </span> <span id="item_6" class="span_class"></span>  </div>
+                                                    
                         </div>
         
                     </div>
         
                     <div class="ML">
                         <div class="upper_ergebnisse">  <h3 id="result_text"> Schlüsselinformation </h3> </div>
-                        <div class= "under_ergebnisse" id="ml_output_div">
-                            Bitte ein Fördermittel auswählen.
+                        <div class= "under_ergebnisse" id="ml_output_div"> 
+                               Bitte eine Förderung auswählen
                         </div>
                     </div>
         
                     <div class="frame">
-                        <iframe id='frame_viewer' src="http://www.africau.edu/images/default/sample.pdf" >
+                        <iframe id='frame_viewer' src="" >
                     </div>
                 
                 </div>   

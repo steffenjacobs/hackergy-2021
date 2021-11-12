@@ -1,9 +1,10 @@
 div{
-   /* border: 3px solid #73AD21; */
+    /*border: 3px solid #73AD21; */
 }
 
-
-
+li{
+    font-weight: 700;
+}
 .fix_stuff{
     border: 0px;
 }
@@ -38,21 +39,24 @@ div{
     left: 2%;
     /* border: 3px solid #73AD21; */
     top: 50%;
-    bottom: 25%;
+    bottom: 35%;
     width: 47%;
+}
+
+#summary_div{
+    bottom: 0;
 }
 
 .ML{
     position: fixed;
     left: 2%;
     /* border: 3px solid #73AD21; */
-    top: 75%;
+    top: 67%;
     bottom: 5%;
     width: 47%;
 }
 
 #ml_output_div{
-    font-weight: 700;
     bottom: 0px;
 }
 
@@ -74,24 +78,46 @@ div{
     width: 47%;
 }
 
+.span_class{
+    display: inline-block;
+    width: 32%;
+}
+
+.span_class_2{
+    width: 16%;
+    display: inline-block;
+    font-weight: 700;
+    vertical-align: top;
+    padding-bottom: 5px;
+}
+
 #frame_viewer{
     width: 100%;
     height: 100%;
-    border-radius: 25px;
+    border-radius: 15px;
+    border: none;
 }
 
 #header_text{
-    text-align: center;    
-    font-family: fantasy;
     opacity: 0.8;
     color: #2a5555;
+    font-size: 4vh;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 2%;
+    font-family: Tinos
+}
+
+.subtitle{
+    font-style: italic;
+    font-family: Tinos
 }
 
 .upper_ergebnisse{
     position: relative;
     height: 45px;
     /*border: 3px solid blue;*/
-    border-radius: 25px 25px 0px 0px;
+    border-radius: 15px 15px 0px 0px;
     background-color: #dfe4ea;
     opacity: 0.85;
     border-bottom-width: 3px;
@@ -102,8 +128,8 @@ div{
 .under_ergebnisse{
     position: absolute;    
     top: 50px;
-    /*border: 3px solid yellow;*/
-    border-radius: 0px 0px 25px 25px;
+   /* border: 3px solid yellow;*/
+    border-radius: 0px 0px 15px 15px;
     background-color: #dfe4ea;
     opacity: 0.85;
     text-align: left;
@@ -116,10 +142,10 @@ div{
 #result_text{
     margin: 0.5%;
     margin-left: 1%;
-    font-size: 2vh;
-    text-decoration: underline;
+    font-size: 2.5vh;
     padding-top: 10px;
     padding-left: 1%;
+    color: #324d4c;
 }
 
 .buttons_alignment{
@@ -169,6 +195,7 @@ div{
 
 .fix_stuff{
     margin: -8px;
+    font-family: system-ui
 }
 
 
