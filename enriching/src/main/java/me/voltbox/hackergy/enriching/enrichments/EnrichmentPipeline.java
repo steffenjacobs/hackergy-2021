@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import me.voltbox.hackergy.common.domain.EnrichedGrantDto;
 import me.voltbox.hackergy.common.domain.GrantDto;
 import me.voltbox.hackergy.common.service.DatastoreService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,13 +26,25 @@ public class EnrichmentPipeline {
             var enrichedGrant = categorize(EnrichedGrantDto.builder().grantDto(grantDto).summary(grantDto.getText()).build());
             enrichEntitiesIfNecessary(enrichedGrant, "Unternehmen");
             datastoreService.insertEnrichedGrant(enrichedGrant);
-
-        } else {
-            executorService.submit(() -> {
-                var enrichedGrant = categorize(summarizeText(grantDto));
-                datastoreService.insertEnrichedGrant(enrichedGrant);
-            });
+        } else if ("EnergieagenturRLP".equals(grantDto.getSource())) {
+            if (StringUtils.isEmpty(grantDto.getEligibleRegion())) {
+                grantDto = grantDto.withEligibleRegion("Rheinland-Pfalz");
+            }
+            if (StringUtils.isEmpty(grantDto.getContact())) {
+                grantDto = grantDto.withContact("");
+            }
+            if (StringUtils.isEmpty(grantDto.getSponsor())) {
+                grantDto = grantDto.withSponsor("");
+            }
+            if (grantDto.getType().isEmpty()) {
+                grantDto = grantDto.withType(List.of("Zuschuss"));
+            }
         }
+        var dto = grantDto;
+        executorService.submit(() -> {
+            var enrichedGrant = categorize(summarizeText(dto));
+            datastoreService.insertEnrichedGrant(enrichedGrant);
+        });
     }
 
     private void enrichEntitiesIfNecessary(EnrichedGrantDto enrichedGrant, String entity) {

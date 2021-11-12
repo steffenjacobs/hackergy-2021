@@ -14,11 +14,15 @@ public class GrantDto {
     @BsonId
     String _id;
     String title;
+    @With
     List<String> type;
     List<String> category;
+    @With
     String eligibleRegion;
     List<String> eligibleEntities;
+    @With
     String sponsor;
+    @With
     String contact;
     String text;
     List<String> linkOut;
