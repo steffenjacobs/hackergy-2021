@@ -37,7 +37,7 @@ public class EnrichmentPipeline {
             if (StringUtils.isEmpty(grantDto.getSponsor())) {
                 grantDto = grantDto.withSponsor("");
             }
-            if (grantDto.getType().isEmpty()) {
+            if (grantDto.getType() == null || grantDto.getType().isEmpty()) {
                 grantDto = grantDto.withType(List.of("Zuschuss"));
             }
         }
