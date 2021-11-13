@@ -81,6 +81,7 @@ li{
 .span_class{
     display: inline-block;
     width: 32%;
+    vertical-align: top
 }
 
 .span_class_2{
