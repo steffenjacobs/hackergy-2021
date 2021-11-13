@@ -8,6 +8,7 @@ import me.voltbox.hackergy.common.service.DatastoreService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,9 +50,13 @@ public class EnrichmentPipeline {
 
     private void enrichEntitiesIfNecessary(EnrichedGrantDto enrichedGrant, String entity) {
         var eligibleEntities = enrichedGrant.getGrantDto().getEligibleEntities();
+        if (eligibleEntities == null) {
+            eligibleEntities = new ArrayList<>();
+        }
         if (eligibleEntities.isEmpty()) {
             eligibleEntities.add(entity);
         }
+        enrichedGrant.getGrantDto().setEligibleEntities(eligibleEntities);
     }
 
     public EnrichedGrantDto summarizeText(GrantDto grantDto) {
