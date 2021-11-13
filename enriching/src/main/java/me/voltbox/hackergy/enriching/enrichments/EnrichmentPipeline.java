@@ -24,6 +24,18 @@ public class EnrichmentPipeline {
 
     public void enrichGrant(GrantDto grantDto) {
         if ("ItFoerderungen".equals(grantDto.getSource())) {
+            if (StringUtils.isEmpty(grantDto.getContact())) {
+                grantDto = grantDto.withContact("");
+            }
+            if (StringUtils.isEmpty(grantDto.getSponsor())) {
+                grantDto = grantDto.withSponsor("");
+            }
+            if (grantDto.getType() == null || grantDto.getType().isEmpty()) {
+                grantDto = grantDto.withType(List.of("Zuschuss"));
+            }
+            if (StringUtils.isEmpty(grantDto.getEligibleRegion())) {
+                grantDto = grantDto.withEligibleRegion("bundesweit");
+            }
             var enrichedGrant = categorize(EnrichedGrantDto.builder().grantDto(grantDto).summary(grantDto.getText()).build());
             enrichEntitiesIfNecessary(enrichedGrant, "Unternehmen");
             datastoreService.insertEnrichedGrant(enrichedGrant);
@@ -39,6 +51,9 @@ public class EnrichmentPipeline {
             }
             if (grantDto.getType() == null || grantDto.getType().isEmpty()) {
                 grantDto = grantDto.withType(List.of("Zuschuss"));
+            }
+            if (StringUtils.isEmpty(grantDto.getEligibleRegion())) {
+                grantDto = grantDto.withEligibleRegion("bundesweit");
             }
         }
         var dto = grantDto;
