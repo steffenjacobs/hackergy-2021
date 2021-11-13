@@ -49,7 +49,7 @@ public class DatastoreService {
         return enrichedGrantsCollection.find(and(
                 in("enrichedCategories", filter.getCategory()),
                 or(not(exists("grantDto.eligibleRegion")), in("grantDto.eligibleRegion", filter.getRegion(), "bundesweit")),
-                or(not(exists("grantDto.type")), eq("grantDto.type", filter.getType())),
+                or(not(exists("grantDto.type")), in("grantDto.type", filter.getType())),
                 or(not(exists("grantDto.eligibleEntities")), in("grantDto.eligibleEntities", filter.getEntity()))
         ));
     }
