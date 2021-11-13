@@ -21,7 +21,7 @@ services:
   frontend:
     image: hackergy/frontend:latest
     ports:
-      - "6083:6083"
+      - "6083:443"
     volumes:
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
 
